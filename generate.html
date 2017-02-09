@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function() 
+      {
+		$("#the-string").hide();
+		
+        $("#generate-string").click(function(e) 
+        {
+          $.post("/generator", {"length": $("input[name='length']").val()})
+           .done(function(string) 
+           {
+            $("#generate-string").text("Generate another of length: ");
+            $("#the-string").show();
+            $("#the-string input").val(string);
+          });
+          e.preventDefault();
+        });
+
+        $("#replace-string").click(function(e) 
+        {
+          $.ajax({
+            type: "PUT",
+            url: "/generator",
+            data: {"another_string": $("#the-string input").val()}
+          })
+          .done(function() {
+            alert("Replaced!");
+          });
+          e.preventDefault();
+        });
+
+        $("#delete-string").click(function(e) 
+        {
+          $.ajax({
+            type: "DELETE",
+            url: "/generator"
+          })
+          .done(function() 
+          {
+            $("#generate-string").text("Generate Random String of length: ");
+            $("#the-string").hide();
+          });
+          e.preventDefault();
+        });
+
+      });
+    </script>
+  </head>
+  <body>  
+    <button id="generate-string">Generate Random String of length: </button><input type="text" value="12" name="length"/>
+    <div id="the-string">
+      <input id="random-string" type="text" />
+<!--      <button id="replace-string">Replace</button> -->
+      <button id="delete-string">Delete it</button>
+    </div>
+  </body>
+</html>
